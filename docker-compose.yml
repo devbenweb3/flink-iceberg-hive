@@ -2,6 +2,8 @@ version: "3.5"
 
 services:
 
+  # --------------------------------------------------------------------------------------
+  # compute engine
   flink:
     build: ./flink
     depends_on:
@@ -9,7 +11,9 @@ services:
       - hive-metastore
     ports:
       - "8081:8081"
-
+  
+  # --------------------------------------------------------------------------------------
+  # storage layer
   minio:
     image: minio/minio
     container_name: minio
@@ -33,9 +37,6 @@ services:
       /usr/bin/mc mb minio/warehouse;
       tail -f /dev/null
       " 
-
-
-
 
   metastore_db:
     image: postgres:11
