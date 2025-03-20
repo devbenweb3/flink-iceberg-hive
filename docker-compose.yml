@@ -115,23 +115,20 @@ services:
       test: bash -c "exec 6<> /dev/tcp/localhost/9083"
 
   hive-server2:
-    image: apache/hive:4.0.0
+    image: apache/hive:4.0.1
     hostname: hive-server2
     container_name: hive-server2
     depends_on:
       - hive-metastore
     ports:
       - "10000:10000"
+      - "10002:10002"
     environment:
       SERVICE_NAME: hiveserver2
-      HIVE_METASTORE_URI: thrift://hive-metastore:9083
-      HIVE_SERVER2_THRIFT_BIND_HOST: 0.0.0.0
-      HIVE_SERVER2_THRIFT_PORT: 10000
-      HIVE_SERVER2_TRANSPORT_MODE: binary
-      HIVE_SERVER2_ENABLE_DOAS: "false"
+      SERVICE_OPTS: "-Dhive.metastore.uris=thrift://hive-metastore:9083"
+      IS_RESUME: "true"
     volumes:
       - ./hive-site.xml:/opt/hive/conf/hive-site.xml
-    command: ["/opt/hive/bin/hive", "--service", "hiveserver2"]
 
   hue:
     image: gethue/hue:latest
