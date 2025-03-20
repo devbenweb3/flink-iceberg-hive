@@ -6,6 +6,7 @@ services:
   # compute engine
   flink:
     build: ./flink
+    container_name: flink
     depends_on:
       - minio
       - hive-metastore
@@ -36,7 +37,7 @@ services:
     image: gethue/hue:latest
     container_name: hue
     depends_on:
-      - hive-metastore
+      - hive-server2
     ports:
       - "8888:8888"
     environment:
@@ -76,6 +77,7 @@ services:
   metastore_db:
     image: postgres:11
     hostname: metastore_db
+    container_name: metastore_db
     ports:
       - 5432:5432
     environment:
@@ -93,6 +95,7 @@ services:
 
   hive-metastore:
     hostname: hive-metastore
+    container_name: hive-metastore
     image: 'starburstdata/hive:3.1.2-e.18'
     ports:
       - '9083:9083' # Metastore Thrift
@@ -127,15 +130,21 @@ services:
       test: bash -c "exec 6<> /dev/tcp/localhost/9083"
 
   hive-server2:
-    image: 'starburstdata/hive:3.1.2-e.18'
+    image: apache/hive:4.0.0
     hostname: hive-server2
+    container_name: hive-server2
     depends_on:
       - hive-metastore
     ports:
       - "10000:10000"
     environment:
-      HIVE_METASTORE_URI: thrift://hive-metastore:9083
       SERVICE_NAME: hiveserver2
+      HIVE_METASTORE_URI: thrift://hive-metastore:9083
+      HIVE_SERVER2_THRIFT_BIND_HOST: 0.0.0.0
+      HIVE_SERVER2_THRIFT_PORT: 10000
+      HIVE_SERVER2_TRANSPORT_MODE: binary
+      HIVE_SERVER2_ENABLE_DOAS: "false"
+    command: ["/opt/hive/bin/hive", "--service", "hiveserver2"]
 
 networks:
   default:
