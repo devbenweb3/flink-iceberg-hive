@@ -28,8 +28,8 @@ services:
       - |
         apt-get update && apt-get install -y procps &&
         su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
-        su - airflow -c "airflow db init" &&
-        su - airflow -c "airflow webserver"
+        airflow db init &&
+        airflow webserver
 
   airflow-scheduler:
     image: apache/airflow:latest
@@ -51,7 +51,7 @@ services:
       - |
         apt-get update && apt-get install -y procps &&
         su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
-        su - airflow -c "airflow scheduler"
+        airflow scheduler
 
   airflow-db:
     image: postgres:13
