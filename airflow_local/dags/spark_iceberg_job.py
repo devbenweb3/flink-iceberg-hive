@@ -24,7 +24,7 @@ dag = DAG(
 spark_job = SparkSubmitOperator(
     task_id="insert_orders_to_iceberg",
     application="/opt/spark/scripts/insert_orders.py",
-    conn_id="spark_default",
+    conn_id="spark_master",
     conf={
         "spark.sql.catalog.iceberg": "org.apache.iceberg.spark.SparkCatalog",
         "spark.sql.catalog.iceberg.type": "hive",
