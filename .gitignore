@@ -25,3 +25,4 @@ airflow
 airflow-db-data
 ranger-db-data
 ranger/ranger-master
+spark_jars_airflow

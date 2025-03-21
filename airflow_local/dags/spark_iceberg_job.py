@@ -36,7 +36,7 @@ spark_job = SparkSubmitOperator(
         "spark.hadoop.fs.s3a.path.style.access": "true",
         "spark.sql.extensions": "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions",
     },
-    jars="/opt/spark/jars/iceberg-spark-runtime-3.5_2.12-1.8.1.jar",
+    jars="/opt/spark/jars/iceberg-spark-runtime-3.5_2.12-1.8.1.jar,/opt/spark/jars/hadoop-aws-3.3.4.jar,/opt/spark/jars/aws-java-sdk-bundle-1.12.262.jar",
     executor_cores=1,
     executor_memory="1g",
     driver_memory="1g",
