@@ -23,6 +23,8 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./spark_jars:/opt/spark/jars
+      - ./spark_scripts:/opt/spark/scripts
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
@@ -49,6 +51,8 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./spark_jars:/opt/spark/jars
+      - ./spark_scripts:/opt/spark/scripts
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
