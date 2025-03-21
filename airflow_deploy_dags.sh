@@ -1,0 +1,1 @@
+cp ./airflow_local/dags/* ./airflow/dags/
