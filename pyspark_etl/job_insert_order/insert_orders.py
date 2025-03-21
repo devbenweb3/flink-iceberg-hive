@@ -17,5 +17,8 @@ spark = SparkSession.builder \
 df = spark.sql("SELECT * FROM iceberg.mydb.orders")
 df.show()
 
+df1 = spark.sql("SELECT COUNT(1) FROM iceberg.mydb.orders")
+df1.show()
+
 # Dừng SparkSession
 spark.stop()
