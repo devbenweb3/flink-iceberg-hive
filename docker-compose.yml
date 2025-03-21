@@ -18,7 +18,7 @@ services:
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
-      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -26,7 +26,10 @@ services:
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        apt-get update && apt-get install -y procps &&
+        apt-get update && 
+        apt-get install -y procps &&
+        apt-get install -y --no-install-recommends openjdk-17-jre-headless &&
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 &&
         su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
         airflow db init &&
         airflow webserver
@@ -41,7 +44,7 @@ services:
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
-      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -49,7 +52,10 @@ services:
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        apt-get update && apt-get install -y procps &&
+        apt-get update && 
+        apt-get install -y procps &&
+        apt-get install -y --no-install-recommends openjdk-17-jre-headless &&
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 &&
         su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
         airflow scheduler
 
