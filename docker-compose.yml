@@ -9,6 +9,7 @@ services:
     image: apache/airflow:latest
     container_name: airflow-webserver
     restart: always
+    user: root 
     depends_on:
       - airflow-scheduler
       - airflow-db
@@ -17,6 +18,7 @@ services:
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -24,19 +26,22 @@ services:
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        airflow db init &&
-        pip install apache-airflow-providers-apache-spark &&
-        airflow webserver
+        apt-get update && apt-get install -y procps &&
+        su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
+        su - airflow -c "airflow db init" &&
+        su - airflow -c "airflow webserver"
 
   airflow-scheduler:
     image: apache/airflow:latest
     container_name: airflow-scheduler
     restart: always
+    user: root 
     depends_on:
       - airflow-db
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -44,8 +49,9 @@ services:
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        pip install apache-airflow-providers-apache-spark &&
-        airflow scheduler
+        apt-get update && apt-get install -y procps &&
+        su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
+        su - airflow -c "airflow scheduler"
 
   airflow-db:
     image: postgres:13
