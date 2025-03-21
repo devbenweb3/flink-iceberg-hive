@@ -1,10 +1,3 @@
-docker compose build
-docker compose up
-
-
-docker compose exec -it flink ./bin/sql-client.sh
-
-
 CREATE CATALOG iceberg_hive WITH (
         'type' = 'iceberg',
         'catalog-type'='hive',
@@ -33,6 +26,5 @@ VALUES
     ('order001', 'Product A', 100.00, 1, 'California', '2024-04-03', 'cust001', '1234567890'),
     ('order002', 'Product B', 150.00, 2, 'New York', '2024-04-03', 'cust002', '1234567890'),
     ('order003', 'Product C', 200.00, 1, 'Texas', '2024-04-03', 'cust003', '1234567890');
-
 
 select * from orders;
