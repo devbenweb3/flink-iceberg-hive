@@ -1,0 +1,5 @@
+https://github.com/aakashnand/trino-ranger-demo
+https://aakashnand.com/blogs/integrating-trino-ranger/#step-2-deploy-docker-compose
+
+admin
+Rangeradmin1
