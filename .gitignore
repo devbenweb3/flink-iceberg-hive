@@ -21,3 +21,7 @@ rad.json
 #Test results file
 TestResults.xml
 superset-db-data
+airflow
+airflow-db-data
+ranger-db-data
+ranger/ranger-master
