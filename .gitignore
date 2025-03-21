@@ -21,3 +21,8 @@ rad.json
 #Test results file
 TestResults.xml
 superset-db-data
+ranger-db-dat
+./ranger/ranger-master/
+./ranger/ranger-master
+./ranger/ranger-master/*
+ranger/ranger-master

@@ -1,0 +1,1 @@
+./ranger-master/ranger_in_docker down
