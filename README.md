@@ -7,3 +7,7 @@ password
 
 # trino account
 admin
+
+# superset account
+admin
+admin
