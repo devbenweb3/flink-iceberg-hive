@@ -1,0 +1,10 @@
+<configuration>
+    <property>
+        <name>ranger.plugin.hive.policy.rest.url</name>
+        <value>http://ranger-admin:6080</value>
+    </property>
+    <property>
+        <name>ranger.plugin.hive.service.name</name>
+        <value>hive</value>
+    </property>
+</configuration>

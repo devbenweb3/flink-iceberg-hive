@@ -3,6 +3,66 @@ version: "3.5"
 services:
 
   # --------------------------------------------------------------------------------------
+  # Security Layer
+
+  ranger_db:
+    image: postgres:11
+    container_name: ranger_db
+    restart: always
+    environment:
+      POSTGRES_USER: ranger
+      POSTGRES_PASSWORD: ranger
+      POSTGRES_DB: ranger
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./ranger-db-data:/var/lib/postgresql/data
+
+  ranger-admin:
+    image: apache/ranger-admin:latest
+    container_name: ranger-admin
+    restart: always
+    environment:
+      DB_FLAVOR: POSTGRES
+      SQL_CONNECTOR_JAR: /usr/share/java/postgresql.jar
+      db_host: ranger_db
+      db_name: ranger
+      db_user: ranger
+      db_password: ranger
+      ranger_admin_username: admin
+      ranger_admin_password: admin
+    ports:
+      - "6080:6080"
+    depends_on:
+      - ranger_db
+
+  ranger-hive:
+    image: apache/ranger-hive-plugin:latest
+    container_name: ranger-hive
+    restart: always
+    environment:
+      RANGER_ADMIN_URL: http://ranger-admin:6080
+      HIVE_METASTORE_URI: thrift://hive-metastore:9083
+    volumes:
+      - ./ranger-hive/conf:/etc/ranger/hive
+    depends_on:
+      - ranger-admin
+      - hive-metastore
+
+  ranger-trino:
+    image: apache/ranger-trino-plugin:latest
+    container_name: ranger-trino
+    restart: always
+    environment:
+      RANGER_ADMIN_URL: http://ranger-admin:6080
+      TRINO_SERVER_URI: http://trino:8080
+    volumes:
+      - ./ranger-trino/conf:/etc/ranger/trino
+    depends_on:
+      - ranger-admin
+      - trino
+
+  # --------------------------------------------------------------------------------------
   # BI Layer - Apache Superset
 
   superset_db:
@@ -77,6 +137,7 @@ services:
       - "8083:8080"
     volumes:
       - ./trino-config:/etc/trino
+      - ./ranger-trino/conf:/etc/ranger/trino
     depends_on:
       - hive-metastore
 
@@ -157,8 +218,16 @@ services:
       AZURE_ABFS_OAUTH_ENDPOINT: ""
       AZURE_WASB_ACCESS_KEY: ""
       HIVE_METASTORE_USERS_IN_ADMIN_ROLE: "admin"
+      HIVE_SERVER2_ENABLE_DOAS: "false"
+      HIVE_AUTHORIZATION_ENABLED: "true"
+      HIVE_AUTHENTICATOR_MANAGER: "org.apache.hadoop.hive.ql.security.authorization.plugin.sqlstd.SQLStdHiveAuthorizerFactory"
+      HIVE_METASTORE_EVENT_LISTENERS: "org.apache.ranger.authorization.hive.authorizer.RangerHiveMetastoreAuthorizer"
+      HIVE_EXECUTION_ENGINE: "mr"
+    volumes:
+      - ./ranger-hive/conf:/etc/ranger/hive
     depends_on:
       - metastore_db
+      - ranger-admin
     healthcheck:
       test: bash -c "exec 6<> /dev/tcp/localhost/9083"
 
