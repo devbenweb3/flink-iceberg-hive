@@ -20,5 +20,20 @@ df.show()
 df1 = spark.sql("SELECT COUNT(1) FROM iceberg.mydb.orders")
 df1.show()
 
+spark.sql(" INSERT INTO iceberg.mydb.orders VALUES (3, 'Product 3', 300.0) ")
+
+df2 = spark.sql("SELECT * FROM iceberg.mydb.orders")
+df2.show()
+
+spark.sql(" UPDATE iceberg.mydb.orders SET amount = 301.0 WHERE ID = 3")
+
+df3 = spark.sql("SELECT * FROM iceberg.mydb.orders")
+df3.show()
+
+spark.sql(" DELETE FROM iceberg.mydb.orders WHERE ID = 3")
+
+df4 = spark.sql("SELECT * FROM iceberg.mydb.orders")
+df4.show()
+
 # Dừng SparkSession
 spark.stop()
