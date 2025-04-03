@@ -6,7 +6,7 @@ services:
   # Orchestration Layer 
 
   airflow-webserver:
-    image: apache/airflow:latest
+    image: apache/airflow:2.10.5
     container_name: airflow-webserver
     restart: always
     user: root 
@@ -37,7 +37,7 @@ services:
         airflow webserver
 
   airflow-scheduler:
-    image: apache/airflow:latest
+    image: apache/airflow:2.10.5
     container_name: airflow-scheduler
     restart: always
     user: root 
@@ -64,7 +64,7 @@ services:
         airflow scheduler
 
   airflow-db:
-    image: postgres:13
+    image: postgres:16
     container_name: airflow-db
     restart: always
     environment:
@@ -140,7 +140,7 @@ services:
   # BI Layer - Apache Superset
 
   superset_db:
-    image: postgres:13
+    image: postgres:16
     container_name: superset_db
     restart: always
     environment:
@@ -177,7 +177,7 @@ services:
   # Compute Engine
 
   spark-master:
-    image: bitnami/spark:latest
+    image: bitnami/spark:3.5.5
     container_name: spark-master
     environment:
       - SPARK_MODE=master
@@ -189,7 +189,7 @@ services:
       - ./spark_jars:/opt/spark/jars
 
   spark-worker:
-    image: bitnami/spark:latest
+    image: bitnami/spark:3.5.5
     container_name: spark-worker
     environment:
       - SPARK_MODE=worker
@@ -203,7 +203,7 @@ services:
       - ./spark_jars:/opt/spark/jars
 
   trino:
-    image: trinodb/trino:latest
+    image: trinodb/trino:474
     container_name: trino
     ports:
       - "8083:8080"
@@ -216,11 +216,11 @@ services:
   # --------------------------------------------------------------------------------------
   # Storage Layer
   minio:
-    image: minio/minio
+    image: minio/minio:RELEASE.2025-03-12T18-04-18Z
     container_name: minio
     environment:
       - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=password
+      - MINIO_ROOT_PASSWORD=miniopassword
       - MINIO_REGION_NAME=us-east-1
     ports:
       - 9001:9001
@@ -230,11 +230,11 @@ services:
   mc:
     depends_on:
       - minio
-    image: minio/mc
+    image: minio/mc:RELEASE.2025-03-12T17-29-24Z
     container_name: mc
     entrypoint: >
       /bin/sh -c "
-      until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;
+      until (/usr/bin/mc config host add minio http://minio:9000 admin miniopassword) do echo '...waiting...' && sleep 1; done;
       /usr/bin/mc rm -r --force minio/warehouse;
       /usr/bin/mc mb minio/warehouse;
       /usr/bin/mc rm -r --force minio/bronze;
@@ -247,7 +247,7 @@ services:
       " 
 
   metastore_db:
-    image: postgres:11
+    image: postgres:16
     hostname: metastore_db
     container_name: metastore_db
     ports:
@@ -279,7 +279,7 @@ services:
       HIVE_METASTORE_WAREHOUSE_DIR: s3://warehouse/
       S3_ENDPOINT: http://minio:9000
       S3_ACCESS_KEY: admin
-      S3_SECRET_KEY: password
+      S3_SECRET_KEY: miniopassword
       S3_PATH_STYLE_ACCESS: "true"
       REGION: ""
       GOOGLE_CLOUD_KEY_FILE_PATH: ""
@@ -312,4 +312,4 @@ services:
 
 networks:
   default:
-    name: fih
+    name: data_lakehouse_net

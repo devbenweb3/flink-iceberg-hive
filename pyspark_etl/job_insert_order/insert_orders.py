@@ -8,7 +8,7 @@ spark = SparkSession.builder \
     .config("spark.sql.catalog.iceberg.warehouse", "s3://warehouse/") \
     .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
     .config("spark.hadoop.fs.s3a.access.key", "admin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "password") \
+    .config("spark.hadoop.fs.s3a.secret.key", "miniopassword") \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions") \
     .enableHiveSupport() \

@@ -3,7 +3,7 @@ flink-iceberg-hive
 
 # minio account
 admin
-password
+miniopassword
 
 # trino account
 admin

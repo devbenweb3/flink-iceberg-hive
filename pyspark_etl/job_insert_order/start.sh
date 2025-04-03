@@ -1,8 +1,8 @@
 docker run --rm --name spark_job_insert_orders \
-  --network fih \
+  --network data_lakehouse_net \
   -v $(pwd)/insert_orders.py:/opt/spark/scripts/insert_orders.py \
   -v $(pwd)/spark_jars:/opt/spark/jars \
-  bitnami/spark:latest \
+  bitnami/spark:3.5.5 \
   /bin/sh -c "/opt/bitnami/spark/bin/spark-submit \
     --master spark://spark-master:7077 \
     --deploy-mode client \
@@ -13,7 +13,7 @@ docker run --rm --name spark_job_insert_orders \
     --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions \
     --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
     --conf spark.hadoop.fs.s3a.access.key=admin \
-    --conf spark.hadoop.fs.s3a.secret.key=password \
+    --conf spark.hadoop.fs.s3a.secret.key=miniopassword \
     --conf spark.hadoop.fs.s3a.path.style.access=true \
     --jars /opt/spark/jars/iceberg-spark-runtime-3.5_2.12-1.8.1.jar \
     /opt/spark/scripts/insert_orders.py"

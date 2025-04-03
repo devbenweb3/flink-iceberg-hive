@@ -26,3 +26,5 @@ airflow-db-data
 ranger-db-data
 ranger/ranger-master
 spark_jars_airflow
+superset-config/__pycache__/
+superset-config/__pycache__/superset_config.cpython-310.pyc
