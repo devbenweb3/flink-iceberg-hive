@@ -1,5 +1,5 @@
 docker run --rm --name spark_job_insert_orders \
-  --network fih \
+  --network data_lakehouse_net \
   -v $(pwd)/insert_orders.py:/opt/spark/scripts/insert_orders.py \
   -v $(pwd)/spark_jars:/opt/spark/jars \
   bitnami/spark:latest \
