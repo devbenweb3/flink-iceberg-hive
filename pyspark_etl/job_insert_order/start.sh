@@ -8,7 +8,7 @@ docker run --rm --name spark_job_insert_orders \
     --deploy-mode client \
     --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog \
     --conf spark.sql.catalog.iceberg.type=hive \
-    --conf spark.sql.catalog.iceberg.uri=thrift://hive-metastore:9083 \
+    --conf spark.sql.catalog.iceberg.uri=thrift://metastore:9083 \
     --conf spark.sql.catalog.iceberg.warehouse=s3://warehouse/ \
     --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions \
     --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \

@@ -28,7 +28,7 @@ spark_job = SparkSubmitOperator(
     conf={
         "spark.sql.catalog.iceberg": "org.apache.iceberg.spark.SparkCatalog",
         "spark.sql.catalog.iceberg.type": "hive",
-        "spark.sql.catalog.iceberg.uri": "thrift://hive-metastore:9083",
+        "spark.sql.catalog.iceberg.uri": "thrift://metastore:9083",
         "spark.sql.catalog.iceberg.warehouse": "s3://warehouse/",
         "spark.hadoop.fs.s3a.endpoint": "http://minio:9000",
         "spark.hadoop.fs.s3a.access.key": "admin",

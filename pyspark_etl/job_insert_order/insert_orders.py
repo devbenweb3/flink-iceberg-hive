@@ -4,7 +4,7 @@ spark = SparkSession.builder \
     .appName("insert_orders") \
     .config("spark.sql.catalog.iceberg", "org.apache.iceberg.spark.SparkCatalog") \
     .config("spark.sql.catalog.iceberg.type", "hive") \
-    .config("spark.sql.catalog.iceberg.uri", "thrift://hive-metastore:9083") \
+    .config("spark.sql.catalog.iceberg.uri", "thrift://metastore:9083") \
     .config("spark.sql.catalog.iceberg.warehouse", "s3://warehouse/") \
     .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
     .config("spark.hadoop.fs.s3a.access.key", "admin") \

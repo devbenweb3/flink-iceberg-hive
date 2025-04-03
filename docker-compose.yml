@@ -150,7 +150,7 @@ services:
     volumes:
       - ./trino-config:/etc/trino
     depends_on:
-      - hive-metastore
+      - metastore
 
   # --------------------------------------------------------------------------------------
   # Storage Layer
@@ -204,13 +204,14 @@ services:
     volumes:
       - ./postgresscripts:/docker-entrypoint-initdb.d
 
-  hive-metastore:
-    hostname: hive-metastore
-    container_name: hive-metastore
-    image: 'starburstdata/hive:3.1.2-e.18'
+  metastore:
+    hostname: metastore
+    container_name: metastore
+    image: apache/hive:4.0.1
     ports:
       - '9083:9083' # Metastore Thrift
     environment:
+      SERVICE_NAME=metastore
       HIVE_METASTORE_DRIVER: org.postgresql.Driver
       HIVE_METASTORE_JDBC_URL: jdbc:postgresql://metastore_db:5432/metastore
       HIVE_METASTORE_USER: hive
