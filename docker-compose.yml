@@ -6,7 +6,7 @@ services:
   # Orchestration Layer 
 
   airflow-webserver:
-    image: apache/airflow:3.0.0b4-python3.12
+    image: apache/airflow:latest
     container_name: airflow-webserver
     restart: always
     user: root 
@@ -37,7 +37,7 @@ services:
         airflow webserver
 
   airflow-scheduler:
-    image: apache/airflow:3.0.0b4-python3.12
+    image: apache/airflow:latest
     container_name: airflow-scheduler
     restart: always
     user: root 
