@@ -11,3 +11,7 @@ admin
 # superset account
 admin
 admin
+
+# airflow account
+admin
+admin

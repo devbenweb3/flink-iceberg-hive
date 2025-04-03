@@ -1,6 +1,80 @@
 version: "3.5"
 
 services:
+  
+  # --------------------------------------------------------------------------------------
+  # Orchestration Layer 
+
+  airflow-webserver:
+    image: apache/airflow:latest
+    container_name: airflow-webserver
+    restart: always
+    user: root 
+    depends_on:
+      - airflow-scheduler
+      - airflow-db
+    ports:
+      - "8085:8080"
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./spark_jars_airflow:/opt/spark/jars
+      - ./spark_scripts:/opt/spark/scripts
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        apt-get update && 
+        apt-get install -y procps &&
+        apt-get install -y --no-install-recommends openjdk-17-jre-headless &&
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 &&
+        su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
+        airflow db init &&
+        airflow webserver
+
+  airflow-scheduler:
+    image: apache/airflow:latest
+    container_name: airflow-scheduler
+    restart: always
+    user: root 
+    depends_on:
+      - airflow-db
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./spark_jars_airflow:/opt/spark/jars
+      - ./spark_scripts:/opt/spark/scripts
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        apt-get update && 
+        apt-get install -y procps &&
+        apt-get install -y --no-install-recommends openjdk-17-jre-headless &&
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 &&
+        su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
+        airflow scheduler
+
+  airflow-db:
+    image: postgres:13
+    container_name: airflow-db
+    restart: always
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./airflow-db-data:/var/lib/postgresql/data
 
   # --------------------------------------------------------------------------------------
   # Security Layer
@@ -101,14 +175,6 @@ services:
 
   # --------------------------------------------------------------------------------------
   # Compute Engine
-  flink:
-    build: ./flink
-    container_name: flink
-    depends_on:
-      - minio
-      - hive-metastore
-    ports:
-      - "8082:8081"
 
   spark-master:
     image: bitnami/spark:latest
@@ -118,6 +184,9 @@ services:
     ports:
       - "7077:7077"
       - "8080:8080"
+    volumes:
+      - ./spark_scripts:/opt/spark/scripts
+      - ./spark_jars:/opt/spark/jars
 
   spark-worker:
     image: bitnami/spark:latest
@@ -129,6 +198,9 @@ services:
       - spark-master
     ports:
       - "8081:8081"
+    volumes:
+      - ./spark_scripts:/opt/spark/scripts
+      - ./spark_jars:/opt/spark/jars
 
   trino:
     image: trinodb/trino:latest
@@ -165,6 +237,12 @@ services:
       until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;
       /usr/bin/mc rm -r --force minio/warehouse;
       /usr/bin/mc mb minio/warehouse;
+      /usr/bin/mc rm -r --force minio/bronze;
+      /usr/bin/mc mb minio/bronze;
+      /usr/bin/mc rm -r --force minio/silver;
+      /usr/bin/mc mb minio/silver;
+      /usr/bin/mc rm -r --force minio/gold;
+      /usr/bin/mc mb minio/gold;
       tail -f /dev/null
       " 
 
