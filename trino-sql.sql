@@ -21,6 +21,9 @@ INSERT INTO iceberg.mydb.orders VALUES (2, 'Product B', 200.0);
 
 SELECT * FROM iceberg.mydb.orders;
 
--- INSERT INTO iceberg.mydb.orders VALUES (3, 'Product 3', 300.0) 
--- UPDATE iceberg.mydb.orders SET amount = 301.0 WHERE ID = 3
+-- INSERT INTO iceberg.mydb.orders VALUES (3, 'Product 3', 300.0) ;
+-- SELECT * FROM iceberg.mydb.orders;
+-- UPDATE iceberg.mydb.orders SET amount = 301.0 WHERE ID = 3;
+-- SELECT * FROM iceberg.mydb.orders;
 -- DELETE FROM  iceberg.mydb.orders WHERE ID IN (3,4,5);
+-- SELECT * FROM iceberg.mydb.orders;
