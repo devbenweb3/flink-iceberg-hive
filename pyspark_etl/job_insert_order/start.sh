@@ -2,7 +2,7 @@ docker run --rm --name spark_job_insert_orders \
   --network data_lakehouse_net \
   -v $(pwd)/insert_orders.py:/opt/spark/scripts/insert_orders.py \
   -v $(pwd)/spark_jars:/opt/spark/jars \
-  bitnami/spark:latest \
+  bitnami/spark:3.5.5 \
   /bin/sh -c "/opt/bitnami/spark/bin/spark-submit \
     --master spark://spark-master:7077 \
     --deploy-mode client \
