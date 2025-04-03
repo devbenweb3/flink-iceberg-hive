@@ -32,7 +32,7 @@ spark_job = SparkSubmitOperator(
         "spark.sql.catalog.iceberg.warehouse": "s3://warehouse/",
         "spark.hadoop.fs.s3a.endpoint": "http://minio:9000",
         "spark.hadoop.fs.s3a.access.key": "admin",
-        "spark.hadoop.fs.s3a.secret.key": "password",
+        "spark.hadoop.fs.s3a.secret.key": "miniopassword",
         "spark.hadoop.fs.s3a.path.style.access": "true",
         "spark.sql.extensions": "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions",
     },

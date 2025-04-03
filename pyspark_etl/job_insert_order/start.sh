@@ -13,7 +13,7 @@ docker run --rm --name spark_job_insert_orders \
     --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions \
     --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
     --conf spark.hadoop.fs.s3a.access.key=admin \
-    --conf spark.hadoop.fs.s3a.secret.key=password \
+    --conf spark.hadoop.fs.s3a.secret.key=miniopassword \
     --conf spark.hadoop.fs.s3a.path.style.access=true \
     --jars /opt/spark/jars/iceberg-spark-runtime-3.5_2.12-1.8.1.jar \
     /opt/spark/scripts/insert_orders.py"
