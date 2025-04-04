@@ -20,11 +20,11 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
-superset-db-data
-airflow
-airflow-db-data
-ranger-db-data
-ranger/ranger-master
-spark_jars_airflow
-superset-config/__pycache__/
-superset-config/__pycache__/superset_config.cpython-310.pyc
+infra/superset-db-data
+infra/airflow
+infra/airflow-db-data
+infra/ranger-db-data
+infra/ranger/ranger-master
+infra/spark_jars_airflow
+infra/superset-config/__pycache__/
+infra/superset-config/__pycache__/superset_config.cpython-310.pyc

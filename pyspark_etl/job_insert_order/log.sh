@@ -1,1 +1,0 @@
-docker logs spark_job_insert_orders
