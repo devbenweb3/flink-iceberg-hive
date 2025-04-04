@@ -21,10 +21,13 @@ rad.json
 #Test results file
 TestResults.xml
 infra/superset-db-data
+infra/notebooks
 infra/airflow
 infra/airflow-db-data
 infra/ranger-db-data
+infra/marquez-db-data
 infra/ranger/ranger-master
 infra/spark_jars_airflow
+infra/spark_jars_jupyter
 infra/superset-config/__pycache__/
 infra/superset-config/__pycache__/superset_config.cpython-310.pyc

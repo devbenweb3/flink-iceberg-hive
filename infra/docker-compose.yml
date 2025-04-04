@@ -19,6 +19,9 @@ services:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
       - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - AIRFLOW__LINEAGE__BACKEND=openlineage.lineage_backend.OpenLineageBackend
+      - OPENLINEAGE_URL=http://marquez-api:5000
+      - OPENLINEAGE_NAMESPACE=default
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -33,6 +36,8 @@ services:
         apt-get install -y --no-install-recommends openjdk-17-jre-headless &&
         export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 &&
         su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
+        su - airflow -c "pip install apache-airflow-providers-openlineage" &&
+        su - airflow -c "pip install apache-airflow-providers-postgres" &&
         airflow db init &&
         airflow webserver
 
@@ -47,6 +52,9 @@ services:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
       - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - AIRFLOW__LINEAGE__BACKEND=openlineage.lineage_backend.OpenLineageBackend
+      - OPENLINEAGE_URL=http://marquez-api:5000
+      - OPENLINEAGE_NAMESPACE=default
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -61,6 +69,8 @@ services:
         apt-get install -y --no-install-recommends openjdk-17-jre-headless &&
         export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 &&
         su - airflow -c "pip install apache-airflow-providers-apache-spark" &&
+        su - airflow -c "pip install apache-airflow-providers-openlineage" &&
+        su - airflow -c "pip install apache-airflow-providers-postgres" &&
         airflow scheduler
 
   airflow-db:
@@ -88,7 +98,7 @@ services:
       - JUPYTER_ENABLE_LAB=yes
       - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
     volumes:
-      - ./notebooks:/home/jovyan
+      - ./notebooks:/home/jovyan/work
       - ./spark_jars_jupyter:/opt/spark/jars
       - ./spark_scripts:/opt/spark/scripts
     depends_on:

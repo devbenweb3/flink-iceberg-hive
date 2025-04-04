@@ -1,0 +1,83 @@
+version: "3.7"
+services:
+  marquez-api:
+    image: "marquezproject/marquez:0.51.1"
+    container_name: marquez-api
+    environment:
+      - MARQUEZ_PORT=5000
+      - MARQUEZ_ADMIN_PORT=5001
+      - POSTGRES_HOST=marquez_db
+      - SEARCH_ENABLED=true
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    volumes:
+      - data:/opt/marquez
+    links:
+      - "marquez_db:postgres"
+    depends_on:
+      - marquez_db
+    entrypoint: ["/opt/marquez/wait-for-it.sh", "marquez_db:5432", "--", "./entrypoint.sh"]
+
+  marquez_db:
+    image: postgres:16
+    container_name: marquez_db
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: marquez
+      POSTGRES_PASSWORD: marquez
+      POSTGRES_DB: marquez
+
+  opensearch:
+    image: opensearchproject/opensearch:2.5.0
+    container_name: marquez-search
+    hostname: opensearch
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch
+      - discovery.seed_hosts=opensearch
+      - cluster.initial_cluster_manager_nodes=opensearch
+      - bootstrap.memory_lock=true
+      - plugins.security.ssl.http.enabled=false
+      - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xms1024m"
+      - OPENSEARCH_PASSWORD=admin
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  marquez-web:
+    image: "marquezproject/marquez-web:0.51.1"
+    container_name: marquez-web
+    build:
+      context: .
+      args:
+        REACT_APP_ADVANCED_SEARCH: true
+    environment:
+      - MARQUEZ_HOST=marquez-api
+      - MARQUEZ_PORT=5000
+      - WEB_PORT=3000
+      - REACT_APP_ADVANCED_SEARCH=true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - marquez-api
+
+networks:
+  default:
+    name: data_lakehouse_net
+
+volumes:
+  data:
+  opensearch-data:
