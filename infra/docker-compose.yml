@@ -77,7 +77,24 @@ services:
       - ./airflow-db-data:/var/lib/postgresql/data
 
   # --------------------------------------------------------------------------------------
-  # BI Layer - Apache Superset
+  # Data Analyst Layer - Apache Superset + Jupyter Notebook
+
+  jupyter_pyspark_notebook:
+    image: jupyter/pyspark-notebook:latest
+    container_name: jupyter_pyspark_notebook
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    volumes:
+      - ./notebooks:/home/jovyan
+      - ./spark_jars_jupyter:/opt/spark/jars
+      - ./spark_scripts:/opt/spark/scripts
+    depends_on:
+      - spark-master
+      - spark-worker
+    command: start-notebook.sh
 
   superset_db:
     image: postgres:16

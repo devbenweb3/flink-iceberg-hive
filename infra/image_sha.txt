@@ -1,0 +1,11 @@
+04_04_2025
+REPOSITORY                 TAG                            IMAGE ID       CREATED         SIZE
+apache/superset            latest                         c83c48662420   10 days ago     943MB
+trinodb/trino              474                            d2bbfaf8d0a6   12 days ago     1.32GB
+bitnami/spark              3.5.5                          ef36720e1944   2 weeks ago     1.34GB
+minio/minio                RELEASE.2025-03-12T18-04-18Z   2eaf94c71682   3 weeks ago     182MB
+minio/mc                   RELEASE.2025-03-12T17-29-24Z   b27ef7f401c2   3 weeks ago     84MB
+postgres                   16                             9e2e5da3dc86   5 weeks ago     436MB
+apache/airflow             2.10.5                         b6e72f8ddc68   7 weeks ago     1.56GB
+jupyter/pyspark-notebook   latest                         384d65133c51   17 months ago   4.86GB
+starburstdata/hive         3.1.2-e.18                     08f120b8c2ec   2 years ago     1.43GB
